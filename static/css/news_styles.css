@@ -1,0 +1,79 @@
+.logo-shadow {
+    -webkit-filter: drop-shadow(2px 2px 0px rgb(34 60 80));
+    filter: drop-shadow(2px 2px 0px rgb(34 60 80));
+}
+
+.navbar-col {
+    padding-left: 0;
+}
+
+.navbar-container {
+    padding-right: 2px;
+}
+
+.btn-login-logout {
+    border-color: rgba(255, 255, 255, .55);
+    color: rgba(255, 255, 255, .55) !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+
+.btn-login-logout:hover {
+    border-color: gold;
+}
+
+.content-container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.announcement {
+    margin-bottom: 1rem;
+}
+
+.article-container {
+    background-color: white;
+}
+
+.title-image {
+    width: 100%;
+    height: 29em;
+    object-fit: cover;
+    padding-right: 0;
+    padding-left: 0;
+    border-radius: inherit;
+}
+
+.title-image-container {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.form-p {
+    z-index: 1;
+    position: relative;
+}
+
+.form-p:focus-within small {
+    display: initial;
+}
+
+.form-p small {
+    display: none;
+    white-space: pre-line;
+}
+
+.alert-field {
+    margin-top: -1.5rem;
+    z-index: 0;
+}
+
+.article-title {
+    display: contents;
+}
+
+.btn-shadow {
+    box-shadow: 1px 1px 0 1px gold;
+}
