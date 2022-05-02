@@ -1,11 +1,40 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+import json
+
 from django.db import models
+from django.db.models.fields.json import KeyTransform
+
+
+class JSONFieldJSONType(models.JSONField):
+    """
+    Custom JSON field because our postgres uses json type and not jsonb.
+
+    Details on these changes within Django can be seen here:
+
+    * https://code.djangoproject.com/ticket/31973
+    * https://code.djangoproject.com/ticket/31956#comment:8
+
+    PR that changed behavior for regular json type:
+    https://github.com/django/django/commit/0be51d2226fce030ac9ca840535a524f41e9832c
+
+    """
+
+    def from_db_value(self, value, expression, connection):
+        if value is None:
+            return value
+        # Some backends (SQLite at least) extract non-string values in their
+        # SQL datatypes.
+        if isinstance(expression, KeyTransform) and not isinstance(value, str):
+            return value
+        try:
+            # Custom implementation for how our data comes out of our postgres
+            # connection.
+            if isinstance(value, dict):
+                data_value = self.get_prep_value(value)
+            else:
+                data_value = value
+            return json.loads(data_value, cls=self.decoder)
+        except json.JSONDecodeError:
+            return value
 
 
 class Fedmovie(models.Model):
@@ -47,7 +76,7 @@ class Session(models.Model):
 class Theater(models.Model):
     name = models.CharField(max_length=150)
     address = models.CharField(max_length=500, blank=True, null=True)
-    scraper_config = models.JSONField(blank=True, null=True)  # This field type is a guess.
+    scraper_config = JSONFieldJSONType(default=dict, blank=True, null=True)
     city = models.CharField(max_length=200, blank=True, null=True)
     scraper = models.CharField(max_length=100)
 
