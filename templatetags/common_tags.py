@@ -7,3 +7,7 @@ register = template.Library()
 def navbar(context):
     return context
 
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
