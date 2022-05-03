@@ -19,7 +19,7 @@ class SessionsList(TemplateView):
         queryset = Session.objects.filter(datetime__range=date_range)\
             .order_by('movie_id', 'theater_id', 'datetime')
 
-        # формируем json вида
+        # формируем словарь вида
         # [{"movie": movie_obj, "theaters": [{"theater": theater_obj, "sessions": [session1_obj, session2_obj]}]}]
         objects = []
         prev_movie_id = None
@@ -36,7 +36,15 @@ class SessionsList(TemplateView):
 
             objects[-1]['theaters'][-1]['sessions'].append(session)
 
+        # собираем список уже начавшихся сеансов
+        current_time = dt.datetime.now()
+        closed_sessions = []
+        for session in queryset:
+            if session.datetime < current_time:
+                closed_sessions.append(session.id)
+
         context['object_list'] = objects
+        context['closed_sessions'] = closed_sessions
         return context
 
 

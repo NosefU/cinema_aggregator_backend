@@ -2,29 +2,29 @@
 {% load common_tags %}
 
 {% block content %}
-     {#    карточка анонса   #}
-{#    <div class="row">#}
-{#            <div class="card text-center announcement">#}
-{#                <div class="card-body">#}
-{#                    <p class="card-text">COVID-19. ЗАРАЗИЛИСЬ: 253 159 980. В РОССИИ: 9 070 674</p>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
+    {#    карточка анонса   #}
+    {#    <div class="row">#}
+    {#            <div class="card text-center announcement">#}
+    {#                <div class="card-body">#}
+    {#                    <p class="card-text">COVID-19. ЗАРАЗИЛИСЬ: 253 159 980. В РОССИИ: 9 070 674</p>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
 
-        <div class="row row-cols-1 row-cols-md-3 content-container">
-            <table class="table table-light mt-2">
-                <tbody>
-                {% for movie_dict in object_list %}
-                    <tr>
-                        <td>
-                            <div class="row mt-2 mb-2">
-                                {#   карточка фильма   #}
-                                {% with movie_dict|get_item:'movie' as movie %}
+    <div class="row row-cols-1 row-cols-md-3 content-container">
+        <table class="table table-light mt-2">
+            <tbody>
+            {% for movie_dict in object_list %}
+                <tr>
+                    <td>
+                        <div class="row mt-2 mb-2">
+                            {#   карточка фильма   #}
+                            {% with movie_dict|get_item:'movie' as movie %}
                                 <div class="col-md-2 col-sm-3 col-xs-6">
                                     <img class="col-md-10 ms-4 d-block float-right" src="{{ movie.posterpath }}" alt="">
                                 </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-12 mt-4 ms-2">
-                                        <h5>{{ movie.filmname }}</h5>
+                                <div class="col-md-4 col-sm-4 col-xs-12 mt-4 ms-2">
+                                    <h5>{{ movie.filmname }}</h5>
                                     <div class="pt-1" style="line-height: 1.8em;">
                                         <b class="me-2">Год</b> {{ movie.cryearofproduction }}<br>
                                         <b class="me-2">Страна</b> {{ movie.countryofproduction }}<br>
@@ -32,60 +32,62 @@
                                         <b class="me-2">Возрастной рейтинг</b> {{ movie.agecategory }}
                                     </div>
                                 </div>
-                                {% endwith %}
-                                {#   карточка конец   #}
+                            {% endwith %}
+                            {#   карточка конец   #}
 
-                                <div class="col-md-5 col-sm-3 col-xs-12">
-                                    <table class="table table-light table-borderless">
-                                        <tbody>
-                                            {% for theater_dict in movie_dict|get_item:'theaters' %}
-                                                <tr>
-                                                    <td>
-                                                        <div class="row align-items-center">
-                                                            {#   название кинотеатра   #}
-                                                            <div class="col-md-3 col-sm-4 col-xs-6 mt-3">
-                                                                {% with theater_dict|get_item:'theater' as theater %}
-                                                                    <h6>{{ theater.name }}</h6>
-                                                                {% endwith %}
-                                                            </div>
-                                                            {#   название кинотеатра конец   #}
-                                                            {#   список сеансов   #}
-                                                            <div class="col-md-9 col-sm-8 col-xs-12 ">
-                                                                {% for session in theater_dict|get_item:'sessions' %}
-                                                                    <a class="btn btn-primary me-2 mt-2" href="{{ session.link }}" role="button">
-                                                                        {{ session.datetime|date:"H:i" }}
-                                                                    </a>
-                                                                {% endfor %}
-                                                            </div>
-                                                            {#   список сеансов конец   #}
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </td>
-
-
-                    <tr>
-
-                {% empty %}
-                    <div class="col g-4"></div>
-                    <div class="col g-4">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <blockquote class="blockquote mb-0">
-                                    <p>Здесь ничего нет ¯\_(ツ)_/¯</p>
-                                </blockquote>
+                            <div class="col-md-5 col-sm-3 col-xs-12">
+                                <table class="table table-light table-borderless">
+                                    <tbody>
+                                    {% for theater_dict in movie_dict|get_item:'theaters' %}
+                                        <tr>
+                                            <td>
+                                                <div class="row align-items-center">
+                                                    {#   название кинотеатра   #}
+                                                    <div class="col-md-3 col-sm-4 col-xs-6 mt-3">
+                                                        {% with theater_dict|get_item:'theater' as theater %}
+                                                            <h6>{{ theater.name }}</h6>
+                                                        {% endwith %}
+                                                    </div>
+                                                    {#   название кинотеатра конец   #}
+                                                    {#   список сеансов   #}
+                                                    <div class="col-md-9 col-sm-8 col-xs-12 ">
+                                                        {% for session in theater_dict|get_item:'sessions' %}
+                                                            <a class="btn btn-primary me-2 mt-2
+                                                                      {#   отключаем кнопку, если сеанс уже начался   #}
+                                                                      {% if session.id in closed_sessions %}
+                                                                          disabled
+                                                                      {% endif %}
+                                                                     "
+                                                               href="{{ session.link }}">
+                                                                {{ session.datetime|date:"H:i" }}
+                                                            </a>
+                                                        {% endfor %}
+                                                    </div>
+                                                    {#   список сеансов конец   #}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                    </td>
+                <tr>
+            {% empty %}
+                <div class="col g-4"></div>
+                <div class="col g-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>Здесь ничего нет ¯\_(ツ)_/¯</p>
+                            </blockquote>
+                        </div>
                     </div>
-                    <div class="col g-4"></div>
-
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                </div>
+                <div class="col g-4"></div>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock content %}
