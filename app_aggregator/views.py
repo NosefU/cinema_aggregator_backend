@@ -1,22 +1,27 @@
 import datetime as dt
 
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views import View
 
 from app_aggregator.models import Session
 
 
-class SessionsList(TemplateView):
-    template_name = 'app_aggregator/sessions_list.html'
+class SessionsList(View):
+    def get(self, request):
+        # дату по умолчанию берём текущую, город - Белгород
+        req_date = request.GET.get('date', dt.date.today().strftime('%Y-%m-%d'))
+        req_city = request.GET.get('city', 'Белгород')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        try:
+            date_range = (
+                dt.datetime.strptime(req_date, '%Y-%m-%d'),
+                dt.datetime.strptime(req_date, '%Y-%m-%d') + dt.timedelta(hours=24)
+            )
+        except ValueError:
+            return HttpResponseBadRequest('Invalid date format')
 
-        date_range = (
-            dt.date.today() + dt.timedelta(hours=24),
-            dt.date.today() + dt.timedelta(hours=48)
-        )
-        queryset = Session.objects.filter(datetime__range=date_range)\
+        queryset = Session.objects.filter(datetime__range=date_range, theater__city=req_city)\
             .order_by('movie_id', 'theater_id', 'datetime')
 
         # формируем словарь вида
@@ -43,8 +48,10 @@ class SessionsList(TemplateView):
             if session.datetime < current_time:
                 closed_sessions.append(session.id)
 
-        context['object_list'] = objects
-        context['closed_sessions'] = closed_sessions
-        return context
+        context = {
+            'object_list': objects,
+            'closed_sessions': closed_sessions
+        }
+        return render(request, 'app_aggregator/sessions_list.html', context=context)
 
 
