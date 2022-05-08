@@ -2,14 +2,58 @@
 {% load common_tags %}
 
 {% block content %}
-    {#    карточка анонса   #}
-    {#    <div class="row">#}
-    {#            <div class="card text-center announcement">#}
-    {#                <div class="card-body">#}
-    {#                    <p class="card-text">COVID-19. ЗАРАЗИЛИСЬ: 253 159 980. В РОССИИ: 9 070 674</p>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
+        <div class="row">
+                <div class="card text-center announcement">
+                    <div class="card-body">
+                        <div class="row">
+                            {#   выбор города   #}
+                            <div class="col-md-4 col-lg-3 col-sm-3 col-xs-6 mt-2 mb-2 order-0 order-lg-0 align-self-center">
+{#                                <select class="form-select" aria-label="Default select example">#}
+{#                                    <option selected>Open this select menu</option>#}
+{#                                    <option value="1">One</option>#}
+{#                                    <option value="2">Two</option>#}
+{#                                    <option value="3">Three</option>#}
+{#                                </select>#}
+                            </div>
+                            {#   конец выбор города   #}
+                            {# выбранная дата #}
+                            <div class="col-md-12 col-lg-5 col-sm-3 col-xs-6 mt-3 mt-lg-2 mb-0 order-2 order-lg-1 align-self-center"
+                                 >
+                                <span class="h5 mt-2 selected-date-header">{{ selected_date|date:"l, j E Y" }}</span><br>
+
+                                <svg height="10" width="20" style="display: block; margin-left: calc(50% - 10px);">
+                                    <polygon points="0,0 20,0 10,10" style="fill:#ccff33" />
+                                </svg>
+
+                            </div>
+                            {# конец выбранная дата #}
+                            {#   выбор даты   #}
+                            <div class="col-md-8 col-lg-4 col-sm-3 col-xs-6 mt-2 mb-2 order-1 order-lg-2 align-self-center">
+                                <div class="btn-group">
+                                    {% for date, is_avail in avail_dates.items %}
+                                        <a class="btn btn-primary {# me-2 mt-2  #}
+                                                  {#   отключаем кнопку, если сеансов в эту дату нет   #}
+                                                  {% if not is_avail %}disabled{% endif %}
+                                                  {#   выделяем кнопку, выбрана соответствующая ей дата   #}
+                                                  {% if date == selected_date %}active{% endif %}
+                                                 "
+                                           href="{% url 'sessions_list' %}?date={{ date|date:"Y-m-d" }}">
+                                            {#   если дата совпадает с текущей, то вместо дня недели пишем "сегодня"   #}
+                                            {% now "Y-m-d" as today_str %}
+                                            {% if date|date:"Y-m-d" == today_str %}
+                                                сегодня
+                                            {% else %}
+                                                {{ date|date:"D" }}
+                                            {% endif %}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {#   конец выбор даты   #}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     <div class="row row-cols-1 row-cols-md-3 content-container">
         <table class="table table-light mt-2">
