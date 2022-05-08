@@ -63,6 +63,7 @@ class SessionsList(View):
         avail_dates = set([d.date() for d in avail_dates])
         avail_dates = {d: d in avail_dates for d in [dt.date.today() + dt.timedelta(days=i) for i in range(7)]}
 
+        # подтягиваем города для селектора городов
         cities = Theater.objects.values_list('city', flat=True).distinct('city')
 
         context = {
