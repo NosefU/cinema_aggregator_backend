@@ -5,13 +5,16 @@
         <div class="row">
                 <div class="card text-center announcement">
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row d-flex justify-content-around">
                             {#   выбор города   #}
-                            <div class="col-md-4 col-lg-3 col-sm-3 col-xs-6 mt-2 mb-2 order-0 order-lg-0 align-self-center">
+                            <div class="col-xl-4 col-lg-3 col-md-4 col-sm-3 col-xs-6 mt-2 mb-2
+                                        order-0 order-lg-0
+                                        align-self-center
+                                        d-flex justify-content-lg-start justify-content-center">
+                                <h6 class="ps-4 me-3 mt-2">Город </h6>
                                 <div class="btn-group">
                                     <button type="button"
-                                            class="btn btn-primary dropdown-toggle"
-                                            style="width: 19rem"
+                                            class="btn btn-primary dropdown-toggle ps-4 pe-4"
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false">
                                         {{ selected_city }}
@@ -19,7 +22,7 @@
                                     <ul class="dropdown-menu">
                                         {% for city in cities %}
                                         <li>
-                                            <a class="dropdown-item" style="width: 19rem"
+                                            <a class="dropdown-item"
                                                href="{% url 'sessions_list' %}?city={{ city }}&date={{ selected_date|date:"Y-m-d" }}">
                                                 {{ city }}
                                             </a>
@@ -30,8 +33,10 @@
                             </div>
                             {#   конец выбор города   #}
                             {# выбранная дата #}
-                            <div class="col-md-12 col-lg-5 col-sm-3 col-xs-6 mt-3 mt-lg-2 mb-0 order-2 order-lg-1 align-self-center"
-                                 >
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-3 col-xs-6
+                                        mt-3 mt-lg-2 mb-0
+                                        order-2 order-lg-1
+                                        align-self-center">
                                 <span class="h5 mt-2 selected-date-header">{{ selected_date|date:"l, j E Y" }}</span><br>
 
                                 <svg height="10" width="20" style="display: block; margin-left: calc(50% - 10px);">
@@ -41,7 +46,10 @@
                             </div>
                             {# конец выбранная дата #}
                             {#   выбор даты   #}
-                            <div class="col-md-8 col-lg-4 col-sm-3 col-xs-6 mt-2 mb-2 order-1 order-lg-2 align-self-center">
+                            <div class="col-xl-4 col-lg-5 col-md-8 col-sm-3 col-xs-6
+                                        mt-2 mb-2
+                                        order-1 order-lg-2
+                                        align-self-center">
                                 <div class="btn-group">
                                     {% for date, is_avail in avail_dates.items %}
                                         <a class="btn btn-primary {# me-2 mt-2  #}
