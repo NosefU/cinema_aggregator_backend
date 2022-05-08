@@ -8,12 +8,25 @@
                         <div class="row">
                             {#   выбор города   #}
                             <div class="col-md-4 col-lg-3 col-sm-3 col-xs-6 mt-2 mb-2 order-0 order-lg-0 align-self-center">
-{#                                <select class="form-select" aria-label="Default select example">#}
-{#                                    <option selected>Open this select menu</option>#}
-{#                                    <option value="1">One</option>#}
-{#                                    <option value="2">Two</option>#}
-{#                                    <option value="3">Three</option>#}
-{#                                </select>#}
+                                <div class="btn-group">
+                                    <button type="button"
+                                            class="btn btn-primary dropdown-toggle"
+                                            style="width: 19rem"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        {{ selected_city }}
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        {% for city in cities %}
+                                        <li>
+                                            <a class="dropdown-item" style="width: 19rem"
+                                               href="{% url 'sessions_list' %}?city={{ city }}&date={{ selected_date|date:"Y-m-d" }}">
+                                                {{ city }}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                             {#   конец выбор города   #}
                             {# выбранная дата #}
@@ -37,7 +50,7 @@
                                                   {#   выделяем кнопку, выбрана соответствующая ей дата   #}
                                                   {% if date == selected_date %}active{% endif %}
                                                  "
-                                           href="{% url 'sessions_list' %}?date={{ date|date:"Y-m-d" }}">
+                                           href="{% url 'sessions_list' %}?city={{ selected_city }}&date={{ date|date:"Y-m-d" }}">
                                             {#   если дата совпадает с текущей, то вместо дня недели пишем "сегодня"   #}
                                             {% now "Y-m-d" as today_str %}
                                             {% if date|date:"Y-m-d" == today_str %}

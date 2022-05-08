@@ -4,7 +4,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
 
-from app_aggregator.models import Session
+from app_aggregator.models import Session, Theater
 
 
 class SessionsList(View):
@@ -63,12 +63,15 @@ class SessionsList(View):
         avail_dates = set([d.date() for d in avail_dates])
         avail_dates = {d: d in avail_dates for d in [dt.date.today() + dt.timedelta(days=i) for i in range(7)]}
 
+        cities = Theater.objects.values_list('city', flat=True).distinct('city')
+
         context = {
             'object_list': objects,
             'closed_sessions': closed_sessions,
             'avail_dates': avail_dates,
             'selected_date': selected_date.date(),
-            'selected_city': req_city
+            'selected_city': req_city,
+            'cities': cities
         }
 
         return render(request, 'app_aggregator/sessions_list.html', context=context)
